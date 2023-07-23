@@ -1,0 +1,62 @@
+user1 = User.objects.create(username='ivan')
+user2 = User.objects.create(username='mihail')
+
+author1 = Author.objects.create(user = user1)
+author2 = Author.objects.create(user = user2, user_rating = 5)
+
+sport = Category.objects.create(category = Category.sport)
+education = Category.objects.create(category = Category.education)
+politics = Category.objects.create(category = Category.politics)
+leisure = Category.objects.create(category = Category.leisure)
+
+article1 = Post.objects.create(author = author1, title = 'Олимпиада')
+article2 = Post.objects.create(author = author1, title = 'Хакатон')
+news1 = Post.objects.create(author = author1, title = 'Хорошие новости', art_on_news = Post.news)
+
+article1.category.set([sport])
+article2.category.set([education])
+news1.category.set([politics, leisure])
+
+article1Category = PostCategory.objects.create(post = article1, category = sport) 
+article2Category = PostCategory.objects.create(post = article1, category = education) 
+news1Category = PostCategory.objects.create(post = article1, category = (leisure, politics)) 
+
+comment1 = Comment.objects.create(post = article1, user = user1, comment = 'Привет')
+comment2 = Comment.objects.create(post = article2, user = user1, comment = 'Люблю хакатоны')
+comment3 = Comment.objects.create(post = news1, user = user2, comment = 'Люблю новости')
+comment4 = Comment.objects.create(post = news1, user = user1, comment = 'Лайк')
+
+article1.like() 	# post_rating = 1
+article1.like() 	# post_rating = 2
+article1.dislike()	# post_rating 1
+
+author1.like() 		# user_rating = 1
+author1.like()		# user_rating = 2
+author1.dislike() 	# user_rating = 1
+
+comment1.like() 	# comment_rating = 1
+comment1.like()		# comment_rating = 2
+comment1.dislike() 	# comment_rating = 1
+
+article1.rating_clear() # post_rating = 0
+author1.rating_clear()	# user_rating = 0
+comment1.rating_clear()	# comment_rating = 0
+
+bestUser()  		# Лучший пользователь:
+	     		# Имя - mihail
+	     		# Рейтинг - 5
+
+allComments(news1) 	# Все коментарии к посту: news1
+			# Дата создания - 2023-07-17 19:19:29
+			# Пользователь - mihail
+			# Рейтинг - 0
+			# Текст - Люблю новости
+
+			# Все коментарии к посту: news1
+			# Дата создания - 2023-07-17 19:20:10
+			# Пользователь - ivan
+			# Рейтинг - 0
+			# Текст - Лайк
+
+
+

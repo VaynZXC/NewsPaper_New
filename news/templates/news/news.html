@@ -1,0 +1,10 @@
+<!--  наследуемся от шаблона base.html -->
+{% extends 'layout/base.html' %}
+<!-- Название у нас будет proudcts -->
+{% block title %}
+Product
+{% endblock title %}
+<!-- В контенте на странице мы выводим сам продукт, первичный ключ которого был передан в адрес -->
+{% block content %}
+<h1>{{ news }}</h1>
+{% endblock content %}
