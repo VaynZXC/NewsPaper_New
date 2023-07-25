@@ -2,9 +2,15 @@
 {% extends 'layout/base.html' %}
 <!-- Название у нас будет proudcts -->
 {% block title %}
-Product
+{{ news.title }}
 {% endblock title %}
 <!-- В контенте на странице мы выводим сам продукт, первичный ключ которого был передан в адрес -->
 {% block content %}
-<h1>{{ news }}</h1>
+  {% if news %}
+    <h1 class="news_title"><strong>{{ news.title }}</strong></h1>
+    <h4 class="news_title_time">{{news.time_in|date:'M d Y' }}</h4>
+    <p class="news_text">{{ news.text }}</p>
+  {% else %}
+    <h2>Такой новости нет.</h2>
+  {% endif %}
 {% endblock content %}

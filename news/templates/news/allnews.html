@@ -6,24 +6,27 @@
 {% endblock title %}
 <!-- В контенте на странице мы выводим сам продукт, первичный ключ которого был передан в адрес -->
 {% block content %}
-  <h1>Все новости</h1>
+  <h1 class="news">Новости</h1>
   {% if allNews %}
-    <table>
+
+  <h3>Всего статей: {{ allNews|length }}</h3>
+
+    <table class="table">
       <tr>
         <td>
-          Заголовок
+          <strong>Заголовок</strong>
         </td>
         <td>
-          Описание
+          <strong>Дата публикации</strong>
         </td>
         <td>
-          Автор
+          <strong>Описание</strong>
         </td>
         <td>
-          Категория
+          <strong>Категория</strong>
         </td>
         <td>
-          Рейтинг
+          <strong>Рейтинг</strong>
         </td>
       </tr>
     {% for news in allNews %}
@@ -32,10 +35,10 @@
           {{ news.title }}
         </td>
         <td>
-          {{ news.text }}
+          {{ news.time_in|date:'M d Y' }}
         </td>
         <td>
-          {{ news.author }}
+          {{ news.text|truncatechars:20 }}
         </td>
         <td>
           {% for category in news.category.all %}
