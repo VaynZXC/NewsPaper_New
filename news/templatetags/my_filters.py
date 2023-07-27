@@ -6,10 +6,10 @@ register = template.Library()
 
 def censor(value):
     words = ['политики']
-    value= str()
+    split_str = value.split()
     for word in words:
-      if value.find(word) != -1:
+      if word in value:
           value = 'В статье есть запрещённые слова. Доступ закрыт!'
           return str(value)
       else:
-          return str(value)
+          return ' '.join((filter(lambda s: s not in words, split_str)))
