@@ -1,5 +1,6 @@
 <!--  наследуемся от шаблона base.html -->
 {% extends 'layout/base.html' %}
+{% load my_filters %}
 <!-- Название у нас будет proudcts -->
 {% block title %}
 {{ news.title }}
@@ -8,7 +9,8 @@
 {% block content %}
   {% if news %}
     <h1 class="news_title"><strong>{{ news.title }}</strong></h1>
-    <h4 class="news_title_time">{{news.time_in|date:'M d Y' }}</h4>
+    <h4 class="news_title_time">{{news.time_in }}</h4>
+    <h4 class="news_author">{{news.author}}({{news.author.user.username}})</h4>
     <p class="news_text">{{ news.text }}</p>
   {% else %}
     <h2>Такой новости нет.</h2>

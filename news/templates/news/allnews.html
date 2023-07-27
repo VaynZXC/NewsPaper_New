@@ -32,13 +32,13 @@
     {% for news in allNews %}
       <tr>
         <td>
-          {{ news.title }}
+          <a href="{{news.id}}">{{ news.title }}</a>
         </td>
         <td>
           {{ news.time_in|date:'M d Y' }}
         </td>
         <td>
-          {{ news.text|truncatechars:20 }}
+          {{ news.text|truncatechars:50 }}
         </td>
         <td>
           {% for category in news.category.all %}
