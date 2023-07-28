@@ -9,49 +9,57 @@
   <h1 class="news">Новости</h1>
   {% if allNews %}
 
+  <form method="GET">
+    {{ filter.form }}
+    <input type="submit" class="btn btn-primary" value="Найти">
+  </form>
+
   <h3>Всего статей: {{ allNews|length }}</h3>
 
-    <table class="table">
-      <tr>
-        <td>
-          <strong>Заголовок</strong>
-        </td>
-        <td>
-          <strong>Дата публикации</strong>
-        </td>
-        <td>
-          <strong>Описание</strong>
-        </td>
-        <td>
-          <strong>Категория</strong>
-        </td>
-        <td>
-          <strong>Рейтинг</strong>
-        </td>
-      </tr>
-    {% for news in allNews %}
-      <tr>
-        <td>
-          <a href="{{news.id}}">{{ news.title }}</a>
-        </td>
-        <td>
-          {{ news.time_in|date:'M d Y' }}
-        </td>
-        <td>
-          {{ news.text|truncatechars:50 }}
-        </td>
-        <td>
-          {% for category in news.category.all %}
-          <a href="">{{category}}</a>
-          {% endfor %}
-        </td>
-        <td>
-          {{ news.post_rating }}
-        </td>
-      </tr>
-    {% endfor%}
-    </table>
-  {% else %}
-    <h2>Новостей нет!</h2>
-  {% endif %}
+  <table class="table">
+    <tr>
+      <td>
+        <strong>Заголовок</strong>
+      </td>
+      <td>
+        <strong>Дата публикации</strong>
+      </td>
+      <td>
+        <strong>Описание</strong>
+      </td>
+      <td>
+        <strong>Категория</strong>
+      </td>
+      <td>
+        <strong>Рейтинг</strong>
+      </td>
+    </tr>
+  {% for news in allNews %}
+    <tr>
+      <td>
+        <a href="{{news.id}}">{{ news.title }}</a>
+      </td>
+      <td>
+        {{ news.time_in|date:'M d Y' }}
+      </td>
+      <td>
+        {{ news.text|truncatechars:50 }}
+      </td>
+      <td>
+        {% for category in news.category.all %}
+        <a href="">{{category}}</a>
+        {% endfor %}
+      </td>
+      <td>
+        {{ news.post_rating }}
+      </td>
+    </tr>
+  {% endfor%}
+  </table>
+  
+  {% include 'news/parts/paginator.html' %}
+
+{% else %}
+  <h2>Новостей нет!</h2>
+{% endif %}
 {% endblock content %}

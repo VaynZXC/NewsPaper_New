@@ -49,7 +49,7 @@ class Post(models.Model):
         (news, 'Новость')
         ]
 
-    art_or_news = models.CharField(max_length= 2, default = article, choices=TYPE, unique=True)
+    art_or_news = models.CharField(max_length= 2, default = article, choices=TYPE)
     time_in = models.DateTimeField(auto_now_add = True)
     category = models.ManyToManyField(Category, through = 'PostCategory')
     title = models.CharField(max_length= 255)
