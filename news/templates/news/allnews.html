@@ -1,14 +1,12 @@
-<!--  наследуемся от шаблона base.html -->
 {% extends 'layout/base.html' %}
-<!-- Название у нас будет proudcts -->
+
 {% block title %}
 Новости
 {% endblock title %}
-<!-- В контенте на странице мы выводим сам продукт, первичный ключ которого был передан в адрес -->
+
 {% block content %}
   <h1 class="news">Новости</h1>
-  {% if allNews %}
-
+{% if allNews %}
   <form method="GET">
     {{ filter.form }}
     <input type="submit" class="btn btn-primary" value="Найти">
@@ -57,7 +55,7 @@
   {% endfor%}
   </table>
   
-  {% include 'news/parts/paginator.html' %}
+{% include 'news/parts/paginator.html' %}
 
 {% else %}
   <h2>Новостей нет!</h2>

@@ -54,6 +54,7 @@ class Post(models.Model):
     category = models.ManyToManyField(Category, through = 'PostCategory')
     title = models.CharField(max_length= 255)
     text = models.TextField(default = "Текст не указан")
+    RATING = [1,2,3,4,5]
     post_rating = models.IntegerField(default = 0)
 
     def like(self):
