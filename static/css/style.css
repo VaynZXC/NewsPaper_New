@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
 }
-.news_title, .news_title_time {
+.news_title_time {
   display: flex;
   justify-content: center;
 }
@@ -13,4 +13,11 @@
   margin-top: 30px;
   padding-left: 10px;
   background-color: rgb(235, 231, 226);
+}
+#btn-post, #postform-btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#postform-category-field, #postform-text-field, #postform-title-field {
+  margin-top: 10px;
 }

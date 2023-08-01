@@ -55,9 +55,16 @@
   {% endfor%}
   </table>
   
-{% include 'news/parts/paginator.html' %}
+  {% include 'news/parts/paginator.html' %}
 
 {% else %}
   <h2>Новостей нет!</h2>
 {% endif %}
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input id="postform-btn" class="btn btn-success"" type="submit", value="Add">
+</form>
+
 {% endblock content %}

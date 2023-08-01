@@ -1,11 +1,11 @@
-<!--  наследуемся от шаблона base.html -->
 {% extends 'layout/base.html' %}
+
 {% load my_filters %}
-<!-- Название у нас будет proudcts -->
+
 {% block title %}
 {{ news.title }}
 {% endblock title %}
-<!-- В контенте на странице мы выводим сам продукт, первичный ключ которого был передан в адрес -->
+
 {% block content %}
   {% if news %}
     <h1 class="news_title"><strong>{{ news.title }}</strong></h1>
