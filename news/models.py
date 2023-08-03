@@ -37,7 +37,7 @@ class Category(models.Model):
 
     def __str__(self):
       return self.get_category_display()
-  
+
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete = models.CASCADE)
 

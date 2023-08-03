@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView
-from .models import Post, Author
-from django.utils import timezone
+from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
 from .forms import PostForm
 
@@ -26,10 +25,16 @@ class PostsList(ListView):
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
     
+    form_class = PostForm
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.author = Author.objects.get(user=request.user)
+            obj.save()
+            sport = Category.objects.get(category=Category.sport)
+            obj.category.set([sport])
         return super().get(request, *args, **kwargs)
 
 class PostDetail(DetailView):

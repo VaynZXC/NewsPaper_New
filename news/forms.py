@@ -1,8 +1,13 @@
 from django.forms import ModelForm
 from .models import Post
 from django import forms
+from .models import Author
 
 class PostForm(ModelForm):
+    #def __init__(self, *args, **kwargs):
+    #    super().__init__(*args, **kwargs)
+    #    self.fields['author'].widget = forms.HiddenInput()
+
     class Meta:
         model = Post
         fields = ['title', 'text', 'category']
