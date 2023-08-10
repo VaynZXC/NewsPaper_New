@@ -35,7 +35,7 @@
   {% for news in allNews %}
     <tr>
       <td>
-        <a href="{% url 'allnews:news' news.id %}">
+        <a href="{% url 'allnews:news_detail' news.id %}">
           {{ news.title }}
         </a>
       </td>
@@ -52,6 +52,10 @@
       </td>
       <td>
         {{ news.post_rating }}
+      </td>
+      <td>
+        <a href="{% url 'allnews:news_update' news.id %}">Update</a>
+        <a href="{% url 'allnews:news_delete' news.id %}">Detele</a>
       </td>
     </tr>
   {% endfor%}

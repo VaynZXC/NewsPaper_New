@@ -21,3 +21,6 @@
 #postform-category-field, #postform-text-field, #postform-title-field {
   margin-top: 10px;
 }
+#delete_news_category {
+  color:rgb(255, 0, 0)
+}

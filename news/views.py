@@ -7,7 +7,6 @@ from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
 from .forms import PostForm
 
-# Create your views here.
 class PostsList(ListView):
     model = Post
     template_name = 'news/allnews.html'
@@ -39,8 +38,9 @@ class PostsList(ListView):
 
 class PostDetail(DetailView):
     model = Post
-    template_name = 'news/news.html'
+    template_name = 'news/news_detail.html'
     context_object_name = 'news'
+    queryset = Post.objects.all()
 
 class PostCreate(CreateView):
     template_name = 'news/news_create.html'
@@ -55,7 +55,9 @@ class PostUpdate(UpdateView):
         return Post.objects.get(pk=id)
     
 class PostDelete(DeleteView):
+    model = Post
     template_name = 'news/news_delete.html'
+    context_object_name = 'news'
     queryset = Post.objects.all()
     success_url = reverse_lazy('allnews:news')
 

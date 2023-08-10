@@ -4,9 +4,9 @@ from news.views import PostDetail, PostsList, Posts, PostCreate, PostDelete, Pos
 app_name = 'allnews'
 urlpatterns = [
     path('', PostsList.as_view()),
-    path('<int:pk>', PostDetail.as_view()),
-    path('news/', Posts.as_view(), name='news'),
-    path('news/create', PostCreate.as_view()),
-    path('news/update/<int:pk>', PostUpdate.as_view()),
-    path('news/delete/<int:pk>', PostDelete.as_view()),
+    path('news/<int:pk>', PostDetail.as_view(), name='news_detail'),
+    path('news/', Posts.as_view()),
+    path('news/create', PostCreate.as_view(),  name='news_create'),
+    path('news/update/<int:pk>', PostUpdate.as_view(),  name='news_update'),
+    path('news/delete/<int:pk>', PostDelete.as_view(),  name='news_delete'),
 ]

@@ -15,7 +15,10 @@ News delete
    </h3>
    <div>
      Author: <span class="badge bg-info">{{ news.author }}</span>
-     Category: <span class="badge bg-info">{{ news.category }}</span>
+     Category:
+        {% for category in news.category.all %}
+        <span class="badge bg-info">{{category}}</span>
+        {% endfor %}
    </div>
  </div>
  <div class="card-body">
