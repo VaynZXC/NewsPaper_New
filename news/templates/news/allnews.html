@@ -35,7 +35,9 @@
   {% for news in allNews %}
     <tr>
       <td>
-        <a href="{{news.id}}">{{ news.title }}</a>
+        <a href="{% url 'allnews:news' news.id %}">
+          {{ news.title }}
+        </a>
       </td>
       <td>
         {{ news.time_in|date:'M d Y' }}

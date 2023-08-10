@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views import View
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
 from .forms import PostForm
@@ -33,14 +34,30 @@ class PostsList(ListView):
             obj = form.save(commit=False)
             obj.author = Author.objects.get(user=request.user)
             obj.save()
-            sport = Category.objects.get(category=Category.sport)
-            obj.category.set([sport])
+            form.save_m2m()
         return super().get(request, *args, **kwargs)
 
 class PostDetail(DetailView):
     model = Post
     template_name = 'news/news.html'
     context_object_name = 'news'
+
+class PostCreate(CreateView):
+    template_name = 'news/news_create.html'
+    form_class = PostForm
+
+class PostUpdate(UpdateView):
+    template_name = 'news/news_create.html'
+    form_class = PostForm
+
+    def get_object(self, **kwargs):
+        id = self.kwargs.get('pk')
+        return Post.objects.get(pk=id)
+    
+class PostDelete(DeleteView):
+    template_name = 'news/news_delete.html'
+    queryset = Post.objects.all()
+    success_url = reverse_lazy('allnews:news')
 
 class Posts(View):
    def get(self, request):
