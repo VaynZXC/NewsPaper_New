@@ -46,6 +46,18 @@ class PostCreate(CreateView):
     template_name = 'news/news_create.html'
     form_class = PostForm
 
+    form_class = PostForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.author = Author.objects.get(user=request.user)
+            obj.save()
+            form.save_m2m()
+        return super().get(request, *args, **kwargs)
+    
+
 class PostUpdate(UpdateView):
     template_name = 'news/news_create.html'
     form_class = PostForm
@@ -59,7 +71,7 @@ class PostDelete(DeleteView):
     template_name = 'news/news_delete.html'
     context_object_name = 'news'
     queryset = Post.objects.all()
-    success_url = reverse_lazy('allnews:news')
+    success_url = reverse_lazy('allnews:')
 
 class Posts(View):
    def get(self, request):
