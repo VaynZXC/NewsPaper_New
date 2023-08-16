@@ -35,7 +35,7 @@
   {% for news in allNews %}
     <tr>
       <td>
-        <a href="{% url 'allnews:news_detail' news.id %}">
+        <a href="{% url 'NewsPaper:news_detail' news.id %}">
           {{ news.title }}
         </a>
       </td>
@@ -54,8 +54,8 @@
         {{ news.post_rating }}
       </td>
       <td>
-        <a href="{% url 'allnews:news_update' news.id %}">Update</a>
-        <a href="{% url 'allnews:news_delete' news.id %}">Detele</a>
+        <a href="{% url 'NewsPaper:news_update' news.id %}">Update</a>
+        <a href="{% url 'NewsPaper:news_delete' news.id %}">Detele</a>
       </td>
     </tr>
   {% endfor%}
@@ -66,11 +66,5 @@
 {% else %}
   <h2>Новостей нет!</h2>
 {% endif %}
-
-<form method="POST">
-  {% csrf_token %}
-  {{ form }}
-  <input id="postform-btn" class="btn btn-success"" type="submit", value="Add">
-</form>
 
 {% endblock content %}

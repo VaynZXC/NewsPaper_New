@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
 from .forms import PostForm
+from django.shortcuts import redirect
 
 class PostsList(ListView):
     model = Post
@@ -46,8 +47,6 @@ class PostCreate(CreateView):
     template_name = 'news/news_create.html'
     form_class = PostForm
 
-    form_class = PostForm
-
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
@@ -55,8 +54,7 @@ class PostCreate(CreateView):
             obj.author = Author.objects.get(user=request.user)
             obj.save()
             form.save_m2m()
-        return super().get(request, *args, **kwargs)
-    
+        return redirect('NewsPaper:news_detail', obj.pk)
 
 class PostUpdate(UpdateView):
     template_name = 'news/news_create.html'
@@ -66,12 +64,14 @@ class PostUpdate(UpdateView):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
     
+    success_url = reverse_lazy('NewsPaper:allnews')
+
 class PostDelete(DeleteView):
     model = Post
     template_name = 'news/news_delete.html'
     context_object_name = 'news'
     queryset = Post.objects.all()
-    success_url = reverse_lazy('allnews:')
+    success_url = reverse_lazy('NewsPaper:allnews')
 
 class Posts(View):
    def get(self, request):
