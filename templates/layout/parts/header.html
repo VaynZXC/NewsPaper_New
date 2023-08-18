@@ -11,8 +11,13 @@
       </ul>
      
       <div class="text-end">
-        <button type="button" class="btn btn-outline-light me-2">Login</button>
-        <button type="button" class="btn btn-warning">Sign-up</button>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'NewsPaperMain:admin_page' %}" class="nav-link px-2 text-white">Ligin in</a></li>
+          {% else %}
+            <p>Welcom,{{user.username}}!</p>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </div>

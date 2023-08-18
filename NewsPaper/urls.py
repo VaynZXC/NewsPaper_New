@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from news.views import Posts
 
+app_name = 'NewsPaperMain'
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name = 'admin_page'),
     path('allnews/', include('news.urls'), name = 'news'),
 ]

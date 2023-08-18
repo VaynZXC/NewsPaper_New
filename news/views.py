@@ -7,6 +7,8 @@ from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
 from .forms import PostForm
 from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 class PostsList(ListView):
     model = Post
@@ -55,7 +57,8 @@ class PostCreate(CreateView):
             obj.save()
             form.save_m2m()
         return redirect('NewsPaper:news_detail', obj.pk)
-
+    
+@method_decorator(login_required(login_url = '/admin/'), name='dispatch')
 class PostUpdate(UpdateView):
     template_name = 'news/news_create.html'
     form_class = PostForm
