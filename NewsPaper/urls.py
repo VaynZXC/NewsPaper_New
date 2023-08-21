@@ -21,5 +21,7 @@ from news.views import Posts
 app_name = 'NewsPaperMain'
 urlpatterns = [
     path('admin/', admin.site.urls, name = 'admin_page'),
+    path('', include('sign.urls')),
     path('allnews/', include('news.urls'), name = 'news'),
+    path('accounts/', include('allauth.urls')),
 ]

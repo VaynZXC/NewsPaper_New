@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>
+ Войти в систему
+</h2>
+
+<form method="post" action="{% url 'SignApp:login' %}" class="py-3">
+
+ {% csrf_token %}
+
+ <table>
+   <tr>
+     <td>{{ form.username.label_tag }}</td>
+     <td>{{ form.username }}</td>
+   </tr>
+   <tr>
+     <td>{{ form.password.label_tag }}</td>
+     <td>{{ form.password }}</td>
+   </tr>
+ </table>
+
+ <button type="submit" class="btn btn-primary">
+   Вход
+ </button>
+</form>
+
+<a class="btn btn-secondary" href="/sign/signup/"> Регистрация </a>
+
+{% endblock content %}
