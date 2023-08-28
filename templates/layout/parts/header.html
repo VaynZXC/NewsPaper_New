@@ -11,11 +11,16 @@
       </ul>
      
       <div class="text-end">
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <ul id="header-ul" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           {% if user.is_authenticated %}
-            <p>Welcom,{{user.username}}!</p>
+            <h4>Welcom, <a href="{% url 'NewsPaper:profile' %}">{{user.username}}</a>!</h4>
+            <a class="nav-link px-2 text-white" href="{% url 'SignApp:logout' %}"><p id="logout">Logout</p></a>
           {% else %}
-            <li><a href="" class="nav-link px-2 text-white">Ligin in</a></li>
+            <li>
+              <a href="{% url 'SignApp:login' %}" class="nav-link px-2 text-white">
+                Ligin in
+              </a>
+            </li>
           {% endif %}
         </ul>
       </div>

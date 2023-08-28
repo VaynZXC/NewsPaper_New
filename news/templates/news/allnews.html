@@ -66,5 +66,7 @@
 {% else %}
   <h2>Новостей нет!</h2>
 {% endif %}
-
+  {% if is_not_premium %}
+    <a id="premium-btn" class="btn btn-info" href="">Хочу Premium!</a>
+  {% endif %}
 {% endblock content %}

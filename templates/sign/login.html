@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>
+<h2 span="">
  Войти в систему
 </h2>
 
@@ -26,6 +26,6 @@
  </button>
 </form>
 
-<a class="btn btn-secondary" href="/sign/signup/"> Регистрация </a>
+<a class="btn btn-secondary" href="{% url 'SignApp:register' %}"> Регистрация </a>
 
 {% endblock content %}

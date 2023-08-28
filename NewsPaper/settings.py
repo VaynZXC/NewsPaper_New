@@ -77,6 +77,8 @@ AUTHENTICATION_BACKENDS = [
    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
+
 LOGIN_URL = '/accounts/login/'
 LIGIN_REDIRECT_URL = '/allnews/'
 

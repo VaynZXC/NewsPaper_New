@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.views import View
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
-from .models import Post, Author, PostCategory, Category
+from .models import Post, Author
 from .filters import PostFilter
 from .forms import PostForm
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import Group
 
 class PostsList(ListView):
     model = Post
@@ -45,7 +47,8 @@ class PostDetail(DetailView):
     context_object_name = 'news'
     queryset = Post.objects.all()
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post')
     template_name = 'news/news_create.html'
     form_class = PostForm
 
@@ -58,8 +61,9 @@ class PostCreate(CreateView):
             form.save_m2m()
         return redirect('NewsPaper:news_detail', obj.pk)
     
-@method_decorator(login_required(login_url = '/admin/'), name='dispatch')
-class PostUpdate(UpdateView):
+@method_decorator(login_required(login_url = '/'), name='dispatch')
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     template_name = 'news/news_create.html'
     form_class = PostForm
 
@@ -69,7 +73,8 @@ class PostUpdate(UpdateView):
     
     success_url = reverse_lazy('NewsPaper:allnews')
 
-class PostDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post')
     model = Post
     template_name = 'news/news_delete.html'
     context_object_name = 'news'
@@ -86,3 +91,20 @@ class Posts(View):
           'posts': posts
          }
       return render(request, 'news/allnews.html', data)
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'account/profile.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
+        return context
+    
+@login_required
+def upgrade_me(request):
+   user = request.user
+   premium_group = Group.objects.get(name='author')
+   if not request.user.groups.filter(name='author').exists():
+       premium_group.user_set.add(user)
+   return redirect('profile.html')
