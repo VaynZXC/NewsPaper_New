@@ -25,3 +25,4 @@ urlpatterns = [
     path('allnews/', include('news.urls'), name = 'news'),
     path('accounts/', include('allauth.urls')),
 ]
+

@@ -9,6 +9,7 @@
  Здесь может содержаться персональная информация для каждого пользователя
 <div>
 
+  
 {% if is_not_author %}
   <a class="btn btn-info" href="{% url 'NewsPaper:upgrade' %}">Хочу стать автором!</a>
 {% else %}

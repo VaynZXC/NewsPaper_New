@@ -16,6 +16,7 @@
         {% for category in news.category.all %}
         <a class="btn news-category-btn" href="{% url 'NewsPaper:confirmation' %}">{{category}}</a>
         {% endfor %}
+        
       </h4>
     </ul>
     <p class="news_text">{{ news.text|censor }}</p>
