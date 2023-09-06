@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django_filters',
 ]
 
+DEFAULT_FROM_EMAIL = 'twitch-vaynzxc@mail.ru'
+
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -126,9 +128,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'site.buisness'
+EMAIL_HOST_PASSWORD = 'banduga55'
+EMAIL_USE_SSL = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
 

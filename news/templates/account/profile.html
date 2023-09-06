@@ -12,9 +12,13 @@
 {% if is_not_author %}
   <a class="btn btn-info" href="{% url 'NewsPaper:upgrade' %}">Хочу стать автором!</a>
 {% else %}
-<h3>
-  Вы в группе "Авторы"
-</h3>
+<h3>Вы в группе "Авторы"</h3>
+{% endif %}
+
+{% if is_not_subscriber %}
+  <a class="btn btn-info" href="{% url 'NewsPaper:subscribe' %}">Подписаться на рассылки!</a>
+{% else %}
+  <h3>Вы подписаты на рыссылку.</h3>
 {% endif %}
 
 {% endblock content %}

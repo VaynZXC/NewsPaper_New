@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+from django.http import HttpResponseRedirect
+
 
 class Test(models.Model):
     time_in = models.DateTimeField(auto_now_add = True)
@@ -25,18 +28,22 @@ class Category(models.Model):
     politics = 'PO'
     education = 'ED'
     leisure = 'LE'
-
     THEMES = [
           (sport, 'Спорт'),
           (politics, 'Политика'),
           (education, 'Образование'),
-          (leisure, 'Досуг')
+          (leisure, 'Досуг'),
         ]
     
     category = models.CharField(max_length = 2, choices=THEMES, unique=True)
+    subscribers = models.ManyToManyField(User, through='CategorySubscriber', related_name='category_set')
 
     def __str__(self):
       return self.get_category_display()
+
+class CategorySubscriber(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete = models.CASCADE)
@@ -55,6 +62,7 @@ class Post(models.Model):
     title = models.CharField(max_length= 255)
     text = models.TextField(default = "Текст не указан")
     post_rating = models.IntegerField(default = 0)
+    subscribe = models.BooleanField(default=False)
 
     def like(self):
       self.post_rating += 1

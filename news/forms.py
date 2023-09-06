@@ -6,11 +6,11 @@ from .models import Author
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'text', 'category']
+        fields = ['title', 'text', 'category', 'subscribe']
         widgets = {
             'title' : forms.TextInput(attrs={
                   'class' : 'form-control',
-                  'palaceholder' : 'Заголовок...',
+                  'placeholder' : 'Заголовок...',
                   'id' : 'postform-title-field'
                 }),
             'text' : forms.Textarea(attrs={
@@ -20,5 +20,6 @@ class PostForm(ModelForm):
             'category' : forms.SelectMultiple(attrs={
                   'class' : 'form-control', 
                   'id' : 'postform-category-field'
-                })
+                }),
+            'subscribe' : forms.CheckboxInput(attrs={})
         }

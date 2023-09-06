@@ -1,9 +1,11 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import DeleteView, TemplateView
 from django.urls import reverse_lazy
-from .models import Post, Author
+from .models import Post, Author, Category
 from .filters import PostFilter
 from .forms import PostForm
 from django.shortcuts import redirect
@@ -11,6 +13,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
+from django.core.mail import send_mail
+from datetime import datetime
 
 class PostsList(ListView):
     model = Post
@@ -59,7 +63,7 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             obj.author = Author.objects.get(user=request.user)
             obj.save()
             form.save_m2m()
-        return redirect('NewsPaper:news_detail', obj.pk)
+            return redirect('NewsPaper:news_detail', obj.pk)
     
 @method_decorator(login_required(login_url = '/'), name='dispatch')
 class PostUpdate(PermissionRequiredMixin, UpdateView):
@@ -99,12 +103,30 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
+        context['is_not_subscriber'] = not self.request.user.groups.filter(name='subscriber').exists()
         return context
+    
+class ConfirmationView(LoginRequiredMixin, TemplateView):
+    template_name = 'categories/subscribe.html'
+    model = Post
     
 @login_required
 def upgrade_me(request):
-   user = request.user
-   premium_group = Group.objects.get(name='author')
-   if not request.user.groups.filter(name='author').exists():
-       premium_group.user_set.add(user)
-   return redirect('profile.html')
+    user = request.user
+    premium_group = Group.objects.get(name='author')
+    if not request.user.groups.filter(name='author').exists():
+        premium_group.user_set.add(user)
+    return redirect('NewsPaper:profile')
+
+#@login_required
+#def subscribe_me(request):
+    user = request.user
+    premium_group = Group.objects.get(name='subscriber')
+    if not request.user.groups.filter(name='subscriber').exists():
+        premium_group.user_set.add(user)
+    return redirect('profile.html')
+
+def subscribe(request, pk):
+    category = Category.objects.get(pk=pk)
+    category.subscribers.add(request.user.id)
+    return redirect('NewsPaper:allnews')

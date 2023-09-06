@@ -10,7 +10,14 @@
   {% if news %}
     <h1 class="news_title"><strong>{{ news.title }}</strong></h1>
     <h4 class="news_title_time">{{news.time_in }}</h4>
-    <h4 class="news_author">{{news.author}}({{news.author.user.username}})</h4>
+    <ul class="news_ul">
+      <h4 class="news_author">{{news.author}}({{news.author.user.username}})</h4>
+      <h4 class="news_category">
+        {% for category in news.category.all %}
+        <a class="btn news-category-btn" href="{% url 'NewsPaper:confirmation' %}">{{category}}</a>
+        {% endfor %}
+      </h4>
+    </ul>
     <p class="news_text">{{ news.text|censor }}</p>
   {% else %}
     <h2>Такой новости нет.</h2>
