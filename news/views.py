@@ -1,3 +1,4 @@
+from typing import Any
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
@@ -50,6 +51,11 @@ class PostDetail(DetailView):
     template_name = 'news/news_detail.html'
     context_object_name = 'news'
     queryset = Post.objects.all()
+
+    def set_category(request):
+        post = PostForm(request.POST)
+        request.session['category'] = post.category
+    
 
 class PostCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
@@ -110,6 +116,13 @@ class ConfirmationView(LoginRequiredMixin, TemplateView):
     template_name = 'categories/subscribe.html'
     model = Post
     
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(request, **kwargs)
+        category = request.session['category']
+        context['category'] = category
+        del request.session['category']
+        return context
+
 @login_required
 def upgrade_me(request):
     user = request.user
@@ -130,3 +143,7 @@ def subscribe(request, pk):
     category = Category.objects.get(pk=pk)
     category.subscribers.add(request.user.id)
     return redirect('NewsPaper:allnews')
+
+def sub_category(request, category_id):
+    category_id.subscribers.add(request.user.id)
+    return redirect('NewsPaper:confirm_subscription')

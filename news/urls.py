@@ -1,5 +1,6 @@
 from django.urls import path
 from news.views import PostDetail, PostsList, Posts, PostCreate, PostDelete, PostUpdate, ProfileView, ConfirmationView, upgrade_me, subscribe
+#from news.views import ConfirmationViewSport, ConfirmationViewEducation, ConfirmationViewLeisure, ConfirmationViewPolitics
 
 app_name = 'NewsPaper'
 urlpatterns = [
@@ -13,6 +14,6 @@ urlpatterns = [
     path('account/upgrade.html', upgrade_me, name='upgrade'),
 
     # Категории
-    path('categories/<int:pk>', subscribe, name='subscribe'),
-    path('categories/subscribe.html', ConfirmationView.as_view(), name='confirmation' )
+    path('categories/<int:pk>', ConfirmationView.as_view(), name='categorie'),
+    path('categories/<int:pk>/subscribe', subscribe, name='subscribe' )
 ]

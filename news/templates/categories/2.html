@@ -1,0 +1,12 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="confirmation">
+  <h4 class="confirmation-title">Хотите ли вы подписаться на категорию Политика ?</h4>
+  <div class="confirmation-btns">
+    <a class="btn btn-success" href="{% url 'NewsPaper:subscribe' 1 %}">Да</a>
+    <a class="btn btn-danger" href="{% url 'NewsPaper:allnews' %}">Нет</a>
+  </div>
+</div>
+
+{% endblock content %}
