@@ -2,11 +2,18 @@
 
 {% block content %}
 <div class="confirmation">
+  {% if subscribed %}
   <h4 class="confirmation-title">Хотите ли вы подписаться на категорию {{category}} ?</h4>
   <div class="confirmation-btns">
-    <a class="btn btn-success" href="{% url 'NewsPaper:subscribe' 1 %}">Да</a>
+    <a class="btn btn-success" href="{% url 'NewsPaper:subscribe' category.pk %}">Да</a>
     <a class="btn btn-danger" href="{% url 'NewsPaper:allnews' %}">Нет</a>
   </div>
+  {% else %}
+  <h4 class="confirmation-title">Вы уже подписаны на категорию {{category}}.</h4>
+  <div class="confirmation-btns">
+    <a class="btn btn-success" href="{% url 'NewsPaper:allnews' %}">Обратно</a>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock content %}

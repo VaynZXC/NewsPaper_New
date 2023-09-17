@@ -14,7 +14,7 @@
       <h4 class="news_author">{{news.author}}({{news.author.user.username}})</h4>
       <h4 class="news_category">
         {% for category in news.category.all %}
-        <a class="btn news-category-btn" href="{% url 'NewsPaper:categorie' category.pk %}">{{category}}</a>
+        <a class="btn news-category-btn" href="{% url 'NewsPaper:category' category.pk %}">{{category}}</a>
         {% endfor %}
         
       </h4>

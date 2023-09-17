@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views.generic import DeleteView, TemplateView
 from django.urls import reverse_lazy
-from .models import Post, Author, Category
+from .models import Post, Author, Category, CategorySubscriber, User
 from .filters import PostFilter
 from .forms import PostForm
 from django.shortcuts import redirect
@@ -52,11 +52,6 @@ class PostDetail(DetailView):
     context_object_name = 'news'
     queryset = Post.objects.all()
 
-    def set_category(request):
-        post = PostForm(request.POST)
-        request.session['category'] = post.category
-    
-
 class PostCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
     template_name = 'news/news_create.html'
@@ -70,6 +65,15 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             obj.save()
             form.save_m2m()
             return redirect('NewsPaper:news_detail', obj.pk)
+        
+    def notificate(self, request, pk):
+        user = self.request.user
+        subscribers = CategorySubscriber.objects.prefetch_related('subscriber').get(id=id)
+        for subscriber in subscribers:
+            category = subscriber.category_id
+            user = subscriber.subscriber_id
+            
+        
     
 @method_decorator(login_required(login_url = '/'), name='dispatch')
 class PostUpdate(PermissionRequiredMixin, UpdateView):
@@ -110,17 +114,42 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
         context['is_not_subscriber'] = not self.request.user.groups.filter(name='subscriber').exists()
+
+        user = self.request.user
+        categories = CategorySubscriber.objects.filter(subscriber=user.id)
+          
+        if categories:
+          context['subscribed'] = True
+          context['categories'] = categories
+        else:
+          context['subscribed'] = False
         return context
     
 class ConfirmationView(LoginRequiredMixin, TemplateView):
     template_name = 'categories/subscribe.html'
     model = Post
     
-    def get_context_data(self, request, **kwargs):
-        context = super().get_context_data(request, **kwargs)
-        category = request.session['category']
+    def get_context_data(self, pk, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        category = Category.objects.get(pk=pk)
+        subscribed = category.subscribers.filter(email=user.email)
+        if not subscribed:
+            context['subscribed'] = True
+            context['category'] = category
+        else:
+            context['subscribed'] = False
+            context['category'] = category
+        return context
+
+class ConfirmationViewUnsubscribe(LoginRequiredMixin, TemplateView):
+    template_name = 'categories/unsubscribe.html'
+    model = Post
+    
+    def get_context_data(self, pk, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = Category.objects.get(pk=pk)
         context['category'] = category
-        del request.session['category']
         return context
 
 @login_required
@@ -142,6 +171,11 @@ def upgrade_me(request):
 def subscribe(request, pk):
     category = Category.objects.get(pk=pk)
     category.subscribers.add(request.user.id)
+    return redirect('NewsPaper:allnews')
+
+def unsubscribe(request, pk):
+    category = Category.objects.get(pk=pk)
+    category.subscribers.remove(request.user.id)
     return redirect('NewsPaper:allnews')
 
 def sub_category(request, category_id):

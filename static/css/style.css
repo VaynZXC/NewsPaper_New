@@ -45,6 +45,16 @@
   margin-top: 15px;
   width: 12vh;
 }
+.category {
+  display: flex;
+}
+#categories {
+  width: 100%;
+}
+#categories-prifile {
+  margin-top: 500px;
+  flex-wrap: wrap;
+}
 #btn-post, #postform-btn {
   margin-top: 20px;
   margin-bottom: 20px;

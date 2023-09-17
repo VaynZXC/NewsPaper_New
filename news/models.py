@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.http import HttpResponseRedirect
+from django.core.mail import send_mail
 
 
 class Test(models.Model):
@@ -114,3 +115,4 @@ def allComments(post_name):
       text = comment.comment
       print('Все коменарии к посту: ', post_name, '\n Дата создания - ', date, 
             '\n Пользователь - ', user, '\n Рейтинг -', rating, '\n Текст -', text)
+    

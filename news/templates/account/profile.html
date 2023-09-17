@@ -6,19 +6,31 @@
 </h2>
 
 <div>
- Здесь может содержаться персональная информация для каждого пользователя
+ <h5>Здесь может содержаться персональная информация для каждого пользователя</h5>
 <div>
 
-  
-{% if is_not_author %}
-  <a class="btn btn-info" href="{% url 'NewsPaper:upgrade' %}">Хочу стать автором!</a>
-{% else %}
-<h3>Вы в группе "Авторы"</h3>
-{% endif %}
 
 {% if is_not_subscriber %}
   <a class="btn btn-info" href="{% url 'NewsPaper:subscribe' %}">Подписаться на рассылки!</a>
 {% else %}
   <h3>Вы подписаты на рыссылку.</h3>
 {% endif %}
+  
+{% if is_not_author %}
+  <a class="btn btn-info" href="{% url 'NewsPaper:upgrade' %}">Хочу стать автором!</a>
+{% else %}
+<h3>Группа: "Авторы"</h3>
+{% endif %}
+
+{% if subscribed %}
+  <div id="categories-prifile">
+    <h3>Категории на которые вы подписаны:</h3>
+  {% for category in categories %}
+    <a class="categories btn news-category-btn" href="{% url 'NewsPaper:category_unsubscribe' category.category.pk %}"><h4>{{category.category}}</h4></a>
+  {% endfor %}
+  </div>
+{% else %}
+  <h3>asdasdas</h3>
+{% endif %}
+
 {% endblock content %}
