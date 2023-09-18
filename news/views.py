@@ -14,8 +14,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
-from django.core.mail import send_mail
-from datetime import datetime
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
+
+DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 
 class PostsList(ListView):
     model = Post
@@ -169,10 +172,34 @@ def upgrade_me(request):
     return redirect('profile.html')
 
 def subscribe(request, pk):
+    user = request.user
     category = Category.objects.get(pk=pk)
-    category.subscribers.add(request.user.id)
-    return redirect('NewsPaper:allnews')
+    if not category.subscribers.filter(id=user.id).exists():
+        category.subscribers.add(user.id)
+        email = user.email
+        html = render_to_string(
+            'mail/subscribe.html',
+            {
+                'category': category,
+                'user': user,    
+            },
+          )
+        
+        msg = EmailMultiAlternatives(
+              subject = f'{category} subscription',
+              body = '',
+              from_email = DEFAULT_FROM_EMAIL,
+              to = [email, ],
+            )
+        msg.attach_alternative(html, 'text/html')
 
+        try:
+            msg.send()
+        except Exception as e:
+            print(e)
+        return redirect('NewsPaper:profile')
+    return redirect('NewsPaper:allnews')
+    
 def unsubscribe(request, pk):
     category = Category.objects.get(pk=pk)
     category.subscribers.remove(request.user.id)
