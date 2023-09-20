@@ -65,6 +65,9 @@ class Post(models.Model):
     post_rating = models.IntegerField(default = 0)
     subscribe = models.BooleanField(default=False)
 
+    def preview(self):
+       return self.text[:124] + '...'
+
     def like(self):
       self.post_rating += 1
 

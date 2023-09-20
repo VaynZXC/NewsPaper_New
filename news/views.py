@@ -163,13 +163,13 @@ def upgrade_me(request):
         premium_group.user_set.add(user)
     return redirect('NewsPaper:profile')
 
-#@login_required
-#def subscribe_me(request):
+@login_required
+def subscribe_me(request):
     user = request.user
     premium_group = Group.objects.get(name='subscriber')
     if not request.user.groups.filter(name='subscriber').exists():
         premium_group.user_set.add(user)
-    return redirect('profile.html')
+    return redirect('NewsPaper:profile')
 
 def subscribe(request, pk):
     user = request.user
@@ -187,7 +187,7 @@ def subscribe(request, pk):
         
         msg = EmailMultiAlternatives(
               subject = f'{category} subscription',
-              body = '',
+              body = f'Здравствуй, {user}. Новая статья в твоём любимом разделе!',
               from_email = DEFAULT_FROM_EMAIL,
               to = [email, ],
             )
@@ -204,7 +204,3 @@ def unsubscribe(request, pk):
     category = Category.objects.get(pk=pk)
     category.subscribers.remove(request.user.id)
     return redirect('NewsPaper:allnews')
-
-def sub_category(request, category_id):
-    category_id.subscribers.add(request.user.id)
-    return redirect('NewsPaper:confirm_subscription')

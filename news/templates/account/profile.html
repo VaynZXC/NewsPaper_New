@@ -11,7 +11,7 @@
 
 
 {% if is_not_subscriber %}
-  <a class="btn btn-info" href="{% url 'NewsPaper:subscribe' %}">Подписаться на рассылки!</a>
+  <a class="btn btn-info" href="{#% url 'NewsPaper:subscribe_me' %#}">Подписаться на рассылки!</a>
 {% else %}
   <h3>Вы подписаты на рыссылку.</h3>
 {% endif %}
