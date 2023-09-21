@@ -68,16 +68,7 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             obj.save()
             form.save_m2m()
             return redirect('NewsPaper:news_detail', obj.pk)
-        
-    def notificate(self, request, pk):
-        user = self.request.user
-        subscribers = CategorySubscriber.objects.prefetch_related('subscriber').get(id=id)
-        for subscriber in subscribers:
-            category = subscriber.category_id
-            user = subscriber.subscriber_id
-            
-        
-    
+
 @method_decorator(login_required(login_url = '/'), name='dispatch')
 class PostUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('news.change_post')

@@ -84,7 +84,7 @@ AUTHENTICATION_BACKENDS = [
    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
+#ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
 
 LOGIN_URL = '/accounts/login/'
 LIGIN_REDIRECT_URL = '/allnews/'
@@ -133,7 +133,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+#DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
@@ -141,6 +141,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = config('EMAIL_USE_SSL')
 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
 
 STATIC_URL = 'static/'
 

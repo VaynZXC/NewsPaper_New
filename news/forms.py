@@ -21,5 +21,4 @@ class PostForm(ModelForm):
                   'class' : 'form-control', 
                   'id' : 'postform-category-field'
                 }),
-            'subscribe' : forms.CheckboxInput(attrs={})
         }
