@@ -12,6 +12,12 @@ class Author(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     user_rating = models.IntegerField(default=0)
 
+    posts_on_this_day = models.IntegerField(default=0)
+    posts_day_limit = models.IntegerField(default=3)
+    limit_status = models.BooleanField(default=False)
+    if posts_on_this_day >= posts_day_limit:
+       limit_status = True
+
     def like(self):
       self.user_rating += 1
 

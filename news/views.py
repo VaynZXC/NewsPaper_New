@@ -62,9 +62,19 @@ class PostCreate(PermissionRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
+        user = request.user
+        premium_group = Group.objects.get(name='author')
+
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.author = Author.objects.get(user=request.user)
+            obj.author = Author.objects.get(user=user)
+            author = obj.author
+            if author.limit_status == False:
+              author.posts_on_this_day += 1
+            else:
+              if request.user.groups.filter(name='author').exists():
+                premium_group.user_set.remove(user)
+                
             obj.save()
             form.save_m2m()
             return redirect('NewsPaper:news_detail', obj.pk)
@@ -106,12 +116,14 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
-        context['is_not_subscriber'] = not self.request.user.groups.filter(name='subscriber').exists()
-
         user = self.request.user
+        author = Author.objects.get(user=user)
         categories = CategorySubscriber.objects.filter(subscriber=user.id)
-          
+
+        context['is_not_author'] = not user.groups.filter(name = 'author').exists()
+        context['is_not_subscriber'] = not user.groups.filter(name='subscriber').exists()
+        context['posts_on_this_day'] = author.posts_on_this_day
+
         if categories:
           context['subscribed'] = True
           context['categories'] = categories
