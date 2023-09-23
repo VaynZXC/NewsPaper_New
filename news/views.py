@@ -12,11 +12,13 @@ from .forms import PostForm
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
+from datetime import datetime, timedelta
+from django.core.exceptions import PermissionDenied
 
 DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 
@@ -55,7 +57,7 @@ class PostDetail(DetailView):
     context_object_name = 'news'
     queryset = Post.objects.all()
 
-class PostCreate(PermissionRequiredMixin, CreateView):
+class PostCreate(UserPassesTestMixin, PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
     template_name = 'news/news_create.html'
     form_class = PostForm
@@ -63,21 +65,24 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         user = request.user
-        premium_group = Group.objects.get(name='author')
 
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.author = Author.objects.get(user=user)
-            author = obj.author
-            if author.limit_status == False:
-              author.posts_on_this_day += 1
-            else:
-              if request.user.groups.filter(name='author').exists():
-                premium_group.user_set.remove(user)
-                
+            obj.author = Author.objects.get(user=user)  
             obj.save()
             form.save_m2m()
             return redirect('NewsPaper:news_detail', obj.pk)
+    
+    def test_func(self, *args, **kwargs):
+        author = Author.objects.get(user=self.request.user.id)
+        yesterday = datetime.now() - timedelta(days=1)
+        post_day = Post.objects.filter(author=author, time_in__gt=yesterday).count()
+        print(post_day)
+        if post_day > 2:
+            raise PermissionDenied("Допускается постить до 3 новостей в день")
+        else:
+            return redirect('NewsPaper:profile')
+
 
 @method_decorator(login_required(login_url = '/'), name='dispatch')
 class PostUpdate(PermissionRequiredMixin, UpdateView):
@@ -119,10 +124,11 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         author = Author.objects.get(user=user)
         categories = CategorySubscriber.objects.filter(subscriber=user.id)
+        yesterday = datetime.now() - timedelta(days=1)
 
         context['is_not_author'] = not user.groups.filter(name = 'author').exists()
         context['is_not_subscriber'] = not user.groups.filter(name='subscriber').exists()
-        context['posts_on_this_day'] = author.posts_on_this_day
+        context['posts_on_this_day'] = Post.objects.filter(author=author, time_in__gt=yesterday).count()
 
         if categories:
           context['subscribed'] = True
