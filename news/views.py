@@ -19,6 +19,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from datetime import datetime, timedelta
 from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 
 DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 
@@ -56,6 +57,13 @@ class PostDetail(DetailView):
     template_name = 'news/news_detail.html'
     context_object_name = 'news'
     queryset = Post.objects.all()
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset) 
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
 
 class PostCreate(UserPassesTestMixin, PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')

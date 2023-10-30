@@ -1,6 +1,6 @@
 from pathlib import Path
 from decouple import config
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +37,14 @@ INSTALLED_APPS = [
     'sign',
     'django_filters',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+        'TIMEOUT': 30,
+    }
+}
 
 DEFAULT_FROM_EMAIL = 'twitch-vaynzxc@mail.ru'
 
