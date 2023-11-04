@@ -170,6 +170,14 @@ LOGGING = {
             'format': '{asctime} {levelname} {message}',
         'style': '{',  
         },
+        'warning_format': {
+          'format': '{asctime} {levelname} {message} {pathname}',
+        'style': '{',
+        },
+        'error_format': {
+          'format': '{asctime} {levelname} {message} {pathname} {exc_info}',
+        'style': '{',
+        },
     },
     'filters': {
         'require_debug_true': {
@@ -183,9 +191,17 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'mail_admins': {
+        'console': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'warning_format'
+        },
+        'console': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'error_format'
         }
     },
     'loggers': {
