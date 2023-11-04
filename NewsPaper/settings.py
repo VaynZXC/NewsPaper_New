@@ -202,18 +202,13 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
             'formatter': 'error_format'
-        }
+        },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        }
     }
 }
 
